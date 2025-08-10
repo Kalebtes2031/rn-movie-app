@@ -12,7 +12,7 @@ const MovieCard = ({
   release_date,
 }: Movie) => {
   return (
-    <Link href={`/movie/${id}`} asChild>
+    <Link href={{ pathname: "/movies/[id]", params: { id: String(id) } }} asChild>
       <TouchableOpacity className="w-[30%]">
         <Image
           source={{
@@ -31,7 +31,7 @@ const MovieCard = ({
         <View className="flex-row items-center justify-start gap-x-1">
           <Image source={icons.star} className="size-4" />
           <Text className="text-xs text-white font-bold uppercase">
-            {Math.round(vote_average / 2)}
+            {vote_average?.toFixed(1)}
           </Text>
         </View>
 
