@@ -126,7 +126,7 @@ export default function Index() {
                 data={movies}
                 renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
-                numColumns={3}
+                numColumns={2}
                 columnWrapperStyle={{
                   justifyContent: "flex-start",
                   gap: 20,

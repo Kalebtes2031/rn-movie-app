@@ -14,6 +14,8 @@ import { icons } from "@/constants/icons";
 import useFetch from "@/services/useFetch";
 import { fetchMovieDetails } from "@/services/api";
 import { useEffect } from "react";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface MovieInfoProps {
   label: string;
@@ -62,6 +64,26 @@ const Details = () => {
       console.log("Fetched movie details:", movie);
     }
   }, [movie]);
+
+  const { favorites, isFavorite, addFavorite, removeFavorite } = useFavorites();
+  const favorite = isFavorite(id as string);
+
+  const toggleFavorite = () => {
+    if (favorite) {
+      const favoriteDoc = favorites.find((fav) => fav.movieId === id);
+      if (favoriteDoc) {
+        removeFavorite(favoriteDoc.id); // Pass doc ID here!
+      }
+    } else {
+      if (movie) {
+        addFavorite({
+          movieId: id as string,
+          title: movie.title,
+          poster: movie.poster_path,
+        });
+      }
+    }
+  };
 
   if (loading)
     return (
@@ -122,7 +144,24 @@ const Details = () => {
 
         {/* Movie Basic Info */}
         <View className="bg-dark-900 rounded-lg p-5 mt-5 mx-4 shadow-md">
-          <Text className="text-white font-bold text-2xl">{movie?.title}</Text>
+          <View className="flex-row items-center justify-between mb-4">
+            <Text className="text-white font-bold text-2xl">
+              {movie?.title}
+            </Text>
+            {/* Favorite Button */}
+            <TouchableOpacity
+              onPress={toggleFavorite}
+              className=" bg-black/60 w-8 h-8 items-center justify-center rounded-full"
+              style={{ borderRadius: 20 }}
+            >
+              <AntDesign
+                name={favorite ? "heart" : "hearto"}
+                size={20}
+                color={favorite ? "#EF4444" : "#FFFFFF"}
+              />
+            </TouchableOpacity>
+          </View>
+
           {movie?.tagline ? (
             <Text className="text-white font-semibold italic mt-1">
               {movie.tagline}
@@ -164,44 +203,50 @@ const Details = () => {
               <MovieInfo label="Budget" value={formatCurrency(movie.budget)} />
             )}
             {isPositiveNumber(movie?.revenue) && (
-              <MovieInfo label="Revenue" value={formatCurrency(movie.revenue)} />
+              <MovieInfo
+                label="Revenue"
+                value={formatCurrency(movie.revenue)}
+              />
             )}
           </View>
 
           {/* Production Companies with logos */}
-          <Text className="text-light-200 font-normal text-sm mt-4">Production Companies</Text>
+          <Text className="text-light-200 font-normal text-sm mt-4">
+            Production Companies
+          </Text>
           {/* <MovieInfo label="Production Companies" value="" /> */}
           <View className="flex-row flex-wrap gap-4 mt-2">
-  {movie?.production_companies?.map((c) => (
-    <View
-      key={c.id}
-      className="flex-row items-center gap-2 max-w-[150px]"
-      accessible
-      accessibilityLabel={`Production company ${c.name}`}
-    >
-      {c.logo_path ? (
-        <View className="bg-white rounded-md p-1 shadow-md">
-          <Image
-            source={{ uri: `https://image.tmdb.org/t/p/w92${c.logo_path}` }}
-            className="w-10 h-10"
-            resizeMode="contain"
-          />
-        </View>
-      ) : (
-        // If no logo, just show name in a slightly styled box so it stands out
-        <View className="bg-gray-700 rounded-md px-2 py-1">
-          <Text className="text-light-100 text-sm">{c.name}</Text>
-        </View>
-      )}
-      {c.logo_path && (
-        <Text className="text-light-100 text-sm flex-shrink max-w-[90px]">
-          {c.name}
-        </Text>
-      )}
-    </View>
-  ))}
-</View>
-
+            {movie?.production_companies?.map((c) => (
+              <View
+                key={c.id}
+                className="flex-row items-center gap-2 max-w-[150px]"
+                accessible
+                accessibilityLabel={`Production company ${c.name}`}
+              >
+                {c.logo_path ? (
+                  <View className="bg-white rounded-md p-1 shadow-md">
+                    <Image
+                      source={{
+                        uri: `https://image.tmdb.org/t/p/w92${c.logo_path}`,
+                      }}
+                      className="w-10 h-10"
+                      resizeMode="contain"
+                    />
+                  </View>
+                ) : (
+                  // If no logo, just show name in a slightly styled box so it stands out
+                  <View className="bg-gray-700 rounded-md px-2 py-1">
+                    <Text className="text-light-100 text-sm">{c.name}</Text>
+                  </View>
+                )}
+                {c.logo_path && (
+                  <Text className="text-light-100 text-sm flex-shrink max-w-[90px]">
+                    {c.name}
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
         </View>
       </ScrollView>
 
