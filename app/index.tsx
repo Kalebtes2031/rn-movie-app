@@ -1,49 +1,70 @@
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Index() {
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [onboardingDone, setOnboardingDone] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
         const value = await AsyncStorage.getItem('onboarding');
-        if (value === 'done') {
-          router.replace('/(tabs)/home');
-        } else {
-          setLoading(false);
-        }
-      } catch (e) {
-        setLoading(false);
+        setOnboardingDone(value === 'done');
+      } catch {
+        setOnboardingDone(false);
       }
     };
     checkOnboarding();
   }, []);
+
+  useEffect(() => {
+    if (!authLoading && onboardingDone !== null) {
+      if (!user) {
+        router.replace('/(auth)/signin');
+      } else if (onboardingDone) {
+        router.replace('/(tabs)/home');
+      }
+    }
+  }, [user, authLoading, onboardingDone]);
 
   const handleContinue = async () => {
     await AsyncStorage.setItem('onboarding', 'done');
     router.replace('/(tabs)/home');
   };
 
-  if (loading) return null;
+  if (authLoading || onboardingDone === null) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Movie App!</Text>
-      <Text style={styles.subtitle}>Discover and save your favorite movies.</Text>
-      <Button
-        title="Continue"
-        onPress={handleContinue}
-      />
-    </View>
-  );
+  if (!onboardingDone) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome to Movie App!</Text>
+        <Text style={styles.subtitle}>
+          Discover and save your favorite movies.
+        </Text>
+        <Button title="Continue" onPress={handleContinue} />
+      </View>
+    );
+  }
+
+  return null;
 }
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

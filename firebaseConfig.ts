@@ -1,4 +1,4 @@
-// firebase.ts
+// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -11,7 +11,11 @@ import {
   updateDoc,
   orderBy,
   limit,
+  onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
+
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -22,13 +26,14 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-console.log("Firebase Config:", firebaseConfig);
-
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 export {
   db,
+  auth, // <--- Export auth
   collection,
   query,
   where,
@@ -38,4 +43,6 @@ export {
   updateDoc,
   orderBy,
   limit,
+   onSnapshot,
+  deleteDoc,
 };
