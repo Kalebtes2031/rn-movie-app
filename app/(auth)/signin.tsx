@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function SignIn() {
   const router = useRouter();
-  const { setUser } = useAuth();
+  const { setUser, signInWithGoogle  } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -114,6 +114,7 @@ export default function SignIn() {
           <TouchableOpacity
             onPress={handleSignIn}
             disabled={loading}
+            className="bg-amber-500"
             style={[styles.button, loading && styles.disabledButton]}
           >
             {loading ? (
@@ -132,7 +133,7 @@ export default function SignIn() {
 
           {/* Social Login */}
           <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialButton}>
+            <TouchableOpacity onPress={signInWithGoogle } style={styles.socialButton}>
               <Ionicons name="logo-google" size={24} color="#DB4437" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#4e8cff",
+    // backgroundColor: "#4e8cff",
     borderRadius: 12,
     height: 50,
     justifyContent: "center",

@@ -153,7 +153,7 @@ const SignupScreen = () => {
           <TouchableOpacity
             onPress={handleSignUp}
             disabled={loading}
-            className={`bg-[#485baf] rounded-xl py-4 shadow-lg shadow-cyan-500/30 ${
+            className={`bg-amber-500 rounded-xl py-4 shadow-lg shadow-cyan-500/30 ${
               loading ? "opacity-70" : ""
             }`}
           >
