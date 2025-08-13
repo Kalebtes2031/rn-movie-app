@@ -11,6 +11,9 @@ import { updateSearchCount } from "@/services/firestoreService";
 import SearchBar from "@/components/SearchBar";
 import MovieDisplayCard from "@/components/MovieCard";
 
+import { LinearGradient } from "expo-linear-gradient";
+
+
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -47,7 +50,10 @@ const Search = () => {
   }, [searchQuery]);
 
   return (
-    <View className="flex-1 bg-primary">
+    <LinearGradient
+              colors={["#0f2027", "#203a43", "#2c5364", "#437057"]}
+              className="flex-1"
+            >
       <Image
         source={images.bg}
         className="flex-1 absolute w-full z-0"
@@ -59,7 +65,7 @@ const Search = () => {
         data={movies as Movie[]}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MovieDisplayCard {...item} />}
-        numColumns={3}
+        numColumns={2}
         columnWrapperStyle={{
           justifyContent: "flex-start",
           gap: 16,
@@ -117,7 +123,7 @@ const Search = () => {
           ) : null
         }
       />
-    </View>
+    </LinearGradient>
   );
 };
 

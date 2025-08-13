@@ -22,7 +22,8 @@ export default function Profile() {
     <ScrollView className="flex-1 bg-gray-50">
       {/* Profile Header */}
       <LinearGradient
-        colors={['#4F46E5', '#7C3AED']}
+                    colors={["#0f2027", "#203a43", "#2c5364"]}
+                    
         className="pt-16 pb-10 px-6 rounded-b-3xl shadow-lg"
       >
         <View className="items-center">
@@ -48,20 +49,22 @@ export default function Profile() {
       </LinearGradient>
 
       {/* Stats Section */}
-      <View className="flex-row justify-around mx-6 -mt-6 bg-white rounded-xl py-4 shadow-md">
-        <View className="items-center">
-          <Text className="text-2xl font-bold text-gray-800">12</Text>
-          <Text className="text-gray-500">Projects</Text>
-        </View>
-        <View className="items-center">
-          <Text className="text-2xl font-bold text-gray-800">34</Text>
-          <Text className="text-gray-500">Connections</Text>
-        </View>
-        <View className="items-center">
-          <Text className="text-2xl font-bold text-gray-800">5</Text>
-          <Text className="text-gray-500">Badges</Text>
-        </View>
-      </View>
+      {/* Stats Section */}
+<View className="flex-row justify-around mx-6 -mt-6 bg-white rounded-xl py-4 shadow-md">
+  <View className="items-center">
+    <Text className="text-2xl font-bold text-gray-800">18</Text>
+    <Text className="text-gray-500">Movies Watched</Text>
+  </View>
+  <View className="items-center">
+    <Text className="text-2xl font-bold text-gray-800">7</Text>
+    <Text className="text-gray-500">Favorites</Text>
+  </View>
+  <View className="items-center">
+    <Text className="text-2xl font-bold text-gray-800">3</Text>
+    <Text className="text-gray-500">Reviews</Text>
+  </View>
+</View>
+
 
       {/* Account Information */}
       <View className="mx-6 mt-8 mb-6">
@@ -70,7 +73,7 @@ export default function Profile() {
         <View className="bg-white rounded-xl p-5 shadow-sm">
           <View className="flex-row items-center mb-5">
             <View className="bg-indigo-100 p-3 rounded-lg mr-4">
-              <MaterialIcons name="email" size={24} color="#4F46E5" />
+              <MaterialIcons name="email" size={24} color="#2c5364" />
             </View>
             <View className="flex-1">
               <Text className="text-gray-500 text-sm">Email</Text>
@@ -80,7 +83,7 @@ export default function Profile() {
           
           <View className="flex-row items-center mb-5">
             <View className="bg-indigo-100 p-3 rounded-lg mr-4">
-              <MaterialIcons name="person" size={24} color="#4F46E5" />
+              <MaterialIcons name="person" size={24} color="#2c5364" />
             </View>
             <View className="flex-1">
               <Text className="text-gray-500 text-sm">Username</Text>
@@ -90,7 +93,7 @@ export default function Profile() {
           
           <View className="flex-row items-center">
             <View className="bg-indigo-100 p-3 rounded-lg mr-4">
-              <MaterialIcons name="fingerprint" size={24} color="#4F46E5" />
+              <MaterialIcons name="fingerprint" size={24} color="#2c5364" />
             </View>
             <View className="flex-1">
               <Text className="text-gray-500 text-sm">User ID</Text>

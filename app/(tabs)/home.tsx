@@ -17,6 +17,7 @@ import MovieCard from "../../components/MovieCard";
 import { getTrendingMovies } from "@/services/firestoreService";
 import TrendingCard from "@/components/TrendingCard";
 import React, { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Index() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function Index() {
     data: trendingMovies,
     loading: trendingLoading,
     error: trendingError,
-     refetch: refetchTrending,
+    refetch: refetchTrending,
   } = useFetch(getTrendingMovies);
 
   const {
@@ -35,7 +36,7 @@ export default function Index() {
     refetch: refetchMovies,
   } = useFetch(() => fetchMovies({ query: "" }));
 
-   const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -69,7 +70,10 @@ export default function Index() {
   }, [trendingMovies]);
 
   return (
-    <View className="flex-1 bg-primary">
+    <LinearGradient
+      colors={["#0f2027", "#203a43", "#2c5364", "#437057"]}
+      className="flex-1"
+    >
       <Image source={images.bg} className="absolute w-full z-0" />
       <ScrollView
         className="flex-1 px-5"
@@ -112,7 +116,7 @@ export default function Index() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View className="w-4" />}
-                  className="mb-4 mt-3"
+                  className=" mt-3"
                 />
               </View>
             )}
@@ -140,6 +144,6 @@ export default function Index() {
           </View>
         )}
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }

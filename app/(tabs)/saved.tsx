@@ -13,6 +13,8 @@ import { icons } from "@/constants/icons";
 import { images } from "@/constants/images"
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { LinearGradient } from "expo-linear-gradient";
+
 
 const Saved = () => {
   const { favorites, loading, removeFavorite } = useFavorites();
@@ -28,7 +30,10 @@ const Saved = () => {
   }
 
   return (
-    <View className="flex-1 bg-black px-4 py-6">
+    <LinearGradient
+              colors={["#0f2027", "#203a43", "#2c5364", "#437057"]}
+              className="flex-1 px-4 py-6"
+            >
       <Text className="text-white text-3xl font-bold mb-6">My Favorites</Text>
 
       {favorites.length === 0 ? (
@@ -104,7 +109,7 @@ const Saved = () => {
           )}
         />
       )}
-    </View>
+    </LinearGradient>
   );
 };
 
