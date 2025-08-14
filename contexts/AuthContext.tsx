@@ -12,15 +12,10 @@ import { auth, db } from "@/firebaseConfig";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
+import { UserProfile } from "@/types/user";
 
 WebBrowser.maybeCompleteAuthSession();
-
-export interface UserProfile {
-  uid: string;
-  email: string;
-  username?: string;
-  createdAt?: string;
-}
 
 type AuthContextType = {
   user: UserProfile | null;
@@ -35,7 +30,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   signOut: async () => {},
   signInWithGoogle: () => {},
-  setUser: () => {}, // dummy
+  setUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -44,33 +39,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Google OAuth setup
   const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: "872883456440-4olp54pfigfj01f5u9umb0rqgpieldmo.apps.googleusercontent.com",
     webClientId: "872883456440-is2nn752e9m0kj12j7gfs722sau8abbk.apps.googleusercontent.com",
-    androidClientId: "872883456440-d567vqcj17msokbcb4nkq4o93posep43.apps.googleusercontent.com",
-    // expoClientId: "872883456440-is2nn752e9m0kj12j7gfs722sau8abbk.apps.googleusercontent.com",
+    redirectUri: makeRedirectUri({ scheme: "movieapp" }),
   });
 
   // Handle Google sign-in result
   useEffect(() => {
-    const signInWithGoogleFirebase = async (idToken: string) => {
-      const credential = GoogleAuthProvider.credential(idToken);
-      const result = await signInWithCredential(auth, credential);
+    const signInWithGoogleFirebase = async (idToken: string, accessToken: string) => {
+      try {
+        const credential = GoogleAuthProvider.credential(idToken, accessToken);
+        const result = await signInWithCredential(auth, credential);
 
-      // Check if user profile exists in Firestore
-      const userRef = doc(db, "users", result.user.uid);
-      const userSnap = await getDoc(userRef);
+        const userRef = doc(db, "users", result.user.uid);
+        const userSnap = await getDoc(userRef);
 
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email,
-          username: result.user.displayName || "",
-          createdAt: new Date().toISOString(),
-        });
+        if (!userSnap.exists()) {
+          const newUser: UserProfile = {
+            uid: result.user.uid,
+            email: result.user.email || "",
+            username: result.user.displayName || "",
+            createdAt: new Date().toISOString(),
+          };
+          await setDoc(userRef, newUser);
+          setUser(newUser);
+        }
+      } catch (err) {
+        console.error("Google sign-in error:", err);
       }
     };
 
-    if (response?.type === "success" && response.authentication?.idToken) {
-      signInWithGoogleFirebase(response.authentication.idToken).catch(console.error);
+    if (response?.type === "success" && response.authentication) {
+      const { idToken, accessToken } = response.authentication;
+      if (idToken && accessToken) {
+        void signInWithGoogleFirebase(idToken, accessToken);
+      } else {
+        console.error("Missing tokens from Google Auth Session");
+      }
     }
   }, [response]);
 
@@ -85,6 +90,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser({
             uid: firebaseUser.uid,
             email: firebaseUser.email || "",
+            username: firebaseUser.displayName || "",
+            createdAt: new Date().toISOString(),
           });
         }
       } else {
@@ -101,7 +108,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
-  const signInWithGoogle = () => promptAsync();
+  const signInWithGoogle = () => {
+    if (request) promptAsync();
+    else console.warn("Google Auth Request not ready yet");
+  };
 
   return (
     <AuthContext.Provider value={{ user, loading, signOut, signInWithGoogle, setUser }}>

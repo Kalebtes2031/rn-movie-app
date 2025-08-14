@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/firebaseConfig";
@@ -11,7 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function SignIn() {
   const router = useRouter();
-  const { setUser, signInWithGoogle  } = useAuth();
+  const { setUser, signInWithGoogle } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +37,11 @@ export default function SignIn() {
     }
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
       const user = userCredential.user;
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
@@ -39,7 +53,7 @@ export default function SignIn() {
       setUser(userProfile);
       router.replace("/(tabs)/home");
     } catch (err: any) {
-      // Error handling remains the same
+      console.error("Sign-in error:", error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +76,12 @@ export default function SignIn() {
         <View style={styles.form}>
           {/* Email Input */}
           <View style={styles.inputContainer}>
-            <Ionicons name="mail-outline" size={20} color="#888" style={styles.icon} />
+            <Ionicons
+              name="mail-outline"
+              size={20}
+              color="#888"
+              style={styles.icon}
+            />
             <TextInput
               placeholder="Email"
               placeholderTextColor="#888"
@@ -77,7 +96,12 @@ export default function SignIn() {
 
           {/* Password Input */}
           <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="#888" style={styles.icon} />
+            <Ionicons
+              name="lock-closed-outline"
+              size={20}
+              color="#888"
+              style={styles.icon}
+            />
             <TextInput
               placeholder="Password"
               placeholderTextColor="#888"
@@ -86,14 +110,14 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={[styles.input, styles.passwordInput]}
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setSecureEntry(!secureEntry)}
               style={styles.eyeIcon}
             >
-              <Ionicons 
-                name={secureEntry ? "eye-off-outline" : "eye-outline"} 
-                size={20} 
-                color="#888" 
+              <Ionicons
+                name={secureEntry ? "eye-off-outline" : "eye-outline"}
+                size={20}
+                color="#888"
               />
             </TouchableOpacity>
           </View>
@@ -133,7 +157,10 @@ export default function SignIn() {
 
           {/* Social Login */}
           <View style={styles.socialContainer}>
-            <TouchableOpacity onPress={signInWithGoogle } style={styles.socialButton}>
+            <TouchableOpacity
+              onPress={signInWithGoogle}
+              style={styles.socialButton}
+            >
               <Ionicons name="logo-google" size={24} color="#DB4437" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
