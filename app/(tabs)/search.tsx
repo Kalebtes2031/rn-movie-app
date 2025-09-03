@@ -6,10 +6,13 @@ import { icons } from "@/constants/icons";
 
 import useFetch from "@/services/useFetch";
 import { fetchMovies } from "@/services/api";
-// import { updateSearchCount } from "@/services/appwrite";
+import { updateSearchCount } from "@/services/firestoreService";
 
 import SearchBar from "@/components/SearchBar";
 import MovieDisplayCard from "@/components/MovieCard";
+
+import { LinearGradient } from "expo-linear-gradient";
+
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,9 +36,11 @@ const Search = () => {
         await loadMovies();
 
         // Call updateSearchCount only if there are results
-        // if (movies?.length! > 0 && movies?.[0]) {
-        //   await updateSearchCount(searchQuery, movies[0]);
-        // }
+        if (movies?.length! > 0 && movies?.[0]) {
+          console.log("Calling updateSearchCount with:", searchQuery, movies[0]);
+
+          await updateSearchCount(searchQuery, movies[0]);
+        }
       } else {
         reset();
       }
@@ -45,7 +50,10 @@ const Search = () => {
   }, [searchQuery]);
 
   return (
-    <View className="flex-1 bg-primary">
+    <LinearGradient
+              colors={["#0f2027", "#203a43", "#2c5364", "#437057"]}
+              className="flex-1"
+            >
       <Image
         source={images.bg}
         className="flex-1 absolute w-full z-0"
@@ -57,7 +65,7 @@ const Search = () => {
         data={movies as Movie[]}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MovieDisplayCard {...item} />}
-        numColumns={3}
+        numColumns={2}
         columnWrapperStyle={{
           justifyContent: "flex-start",
           gap: 16,
@@ -115,7 +123,7 @@ const Search = () => {
           ) : null
         }
       />
-    </View>
+    </LinearGradient>
   );
 };
 

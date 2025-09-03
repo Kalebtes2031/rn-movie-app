@@ -37,6 +37,9 @@
       ],
       "expo-build-properties",
       "expo-dev-client"
+      ],
+      "expo-build-properties",
+      "expo-dev-client"
     ],
     "experiments": {
       "typedRoutes": true
