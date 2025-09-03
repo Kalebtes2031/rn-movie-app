@@ -1,15 +1,22 @@
-import { Text, View } from "react-native";
+import Home from '@/app/(tabs)/index'; // your current index.tsx UI separated
+import AuthScreen from '@/app/movie/AuthScreen'; // or wherever it lives
+import { AuthContext } from '@/contexts/AuthContext';
+import React, { useContext } from 'react';
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+  const context = useContext(AuthContext);
+  
+  if (!context) {
+    throw new Error('Index must be used within an AuthProvider');
+  }
+  
+  const { user, loading } = context;
+
+  if (loading) return null; // or loading spinner
+
+  if (!user) {
+    return <AuthScreen />;
+  }
+
+  return <Home />;
 }
