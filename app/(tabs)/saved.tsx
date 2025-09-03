@@ -1,19 +1,20 @@
+import { icons } from "@/constants/icons";
+import { images } from "@/constants/images";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { LinearGradient } from "expo-linear-gradient";
+import type { Href } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useFavorites } from "@/contexts/FavoritesContext";
-import { useRouter } from "expo-router";
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images"
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { LinearGradient } from "expo-linear-gradient";
 
 
 const Saved = () => {
@@ -60,7 +61,10 @@ const Saved = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               className="flex-row mb-5 items-center bg-gray-900 rounded-xl p-3"
-              onPress={() => router.push(`/movies/${item.movieId}`)}
+              onPress={() => {
+                const href = `/movies/${item.movieId}` as Href;
+                router.push(href);
+              }}
               activeOpacity={0.8}
             >
               {item.poster ? (

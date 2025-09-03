@@ -1,9 +1,10 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Alert, Image, ScrollView } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "expo-router";
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import type { Href } from "expo-router";
+import { useRouter } from "expo-router";
+import React from "react";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -12,7 +13,8 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.replace("/(auth)/signin");
+      const signinHref = "/signin" as Href;
+      router.replace(signinHref);
     } catch (error) {
       Alert.alert("Error", "Failed to sign out. Please try again.");
     }

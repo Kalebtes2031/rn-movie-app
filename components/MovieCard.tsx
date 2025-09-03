@@ -31,7 +31,7 @@ const MovieCard = ({
 
   return (
     <Link
-      href={{ pathname: "/movies/[id]", params: { id: String(id) } }}
+      href={{ pathname: "/movie/[id]", params: { id: String(id) } }}
       asChild
     >
       <TouchableOpacity className="w-[48%] mb-6">
